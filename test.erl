@@ -58,13 +58,13 @@ repinlist(E, L) ->  case E == hd(L) of
                       false -> [] ++ repinlist(E, tl(L))
                     end.
 
-%iterates through a given list
-iterate([], _) -> [];
-iterate(UL, L) -> [repinlist(hd(UL), L)|iterate(tl(UL),L)].
+%iterates through items in a given list and return repetitions
+iteraterep([], _) -> [];
+iteraterep(UL, L) -> [repinlist(hd(UL), L)|iteraterep(tl(UL),L)].
 
 %return a list containing lists of equal elements
 pack([]) -> [];
-pack(L) -> iterate(unique(L), L).
+pack(L) -> iteraterep(unique(L), L).
 
 
 %temperature conversion
