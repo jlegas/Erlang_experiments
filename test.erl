@@ -50,6 +50,7 @@ unique(L) -> notinlist(hd(L),tl(L)) ++ unique(tl(L)).
 reverse([]) -> [];
 reverse(L) -> reverse(tl(L)) ++ [hd(L)].
 
+
 %returns a list of a certain element repetitions from a list
 repinlist(_, []) -> [];
 repinlist(E, L) ->  case E == hd(L) of
@@ -57,9 +58,13 @@ repinlist(E, L) ->  case E == hd(L) of
                       false -> [] ++ repinlist(E, tl(L))
                     end.
 
+%iterates through a given list
+iterate([], _) -> [];
+iterate(UL, L) -> [repinlist(hd(UL), L)|iterate(tl(UL),L)].
+
 %return a list containing lists of equal elements
-%%pack([]) -> [];
-%%pack(L) -> [repinlist(hd(unique(L)))|repinlist()]
+pack([]) -> [];
+pack(L) -> iterate(unique(L), L).
 
 
 %temperature conversion
@@ -79,7 +84,7 @@ product(M, N) ->
   end.
 
 %exponentials
-exp(X, 0) -> 1;
+exp(_, 0) -> 1;
 exp(X, 1) -> X;
 exp(X, Y) -> product(X, exp(X, Y-1)).
 
