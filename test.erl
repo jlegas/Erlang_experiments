@@ -10,13 +10,12 @@
 -author("justi").
 
 %% API
-%-export([reverse/1, duplicate/1, sum/1, number/1, nth/2, temp/1, area/2, square/1, circarea/1, product/2, exp/2, expon/2]).
 -compile(export_all).
 
 
 %return nth element of a list L
 nth(1, L) -> hd(L);
-nth(N, L) -> nth(N-1, tl(L)).
+nth(N, L) -> nth(N - 1, tl(L)).
 
 
 %return the number of elements in the list L
@@ -31,19 +30,19 @@ sum(L) -> hd(L) + sum(tl(L)).
 
 %return a list where all elements are duplicated
 duplicate([]) -> [];
-duplicate(L) -> [hd(L),hd(L)|duplicate(tl(L))].
+duplicate(L) -> [hd(L), hd(L) | duplicate(tl(L))].
 
 
-%returns element not in a list
+%returns element if not in list
 notinlist(E, []) -> [E];
-notinlist(E, L) ->  case E == hd(L) of
-                   false -> notinlist(E, tl(L));
-                   true -> []
-                 end.
+notinlist(E, L) -> case E == hd(L) of
+                     false -> notinlist(E, tl(L));
+                     true -> []
+                   end.
 
 %return a list of unique elements in the list L
 unique([]) -> [];
-unique(L) -> notinlist(hd(L),tl(L)) ++ unique(tl(L)).
+unique(L) -> notinlist(hd(L), tl(L)) ++ unique(tl(L)).
 
 
 %return a list where the order of elements is reversed
@@ -53,14 +52,14 @@ reverse(L) -> reverse(tl(L)) ++ [hd(L)].
 
 %returns a list of a certain element repetitions from a list
 repinlist(_, []) -> [];
-repinlist(E, L) ->  case E == hd(L) of
-                      true -> [E] ++ repinlist(E, tl(L));
-                      false -> [] ++ repinlist(E, tl(L))
-                    end.
+repinlist(E, L) -> case E == hd(L) of
+                     true -> [E] ++ repinlist(E, tl(L));
+                     false -> [] ++ repinlist(E, tl(L))
+                   end.
 
 %iterates through items in a given list and return repetitions
 iteraterep([], _) -> [];
-iteraterep(UL, L) -> [repinlist(hd(UL), L)|iteraterep(tl(UL),L)].
+iteraterep(UL, L) -> [repinlist(hd(UL), L) | iteraterep(tl(UL), L)].
 
 %return a list containing lists of equal elements
 pack([]) -> [];
@@ -80,15 +79,15 @@ circarea(R) -> math:pi() * square(R).
 product(M, N) ->
   if
     M == 0 -> 0;
-    true -> N + product(M-1, N)
+    true -> N + product(M - 1, N)
   end.
 
 %exponentials
 exp(_, 0) -> 1;
 exp(X, 1) -> X;
-exp(X, Y) -> product(X, exp(X, Y-1)).
+exp(X, Y) -> product(X, exp(X, Y - 1)).
 
-%exponentials
+%exponentials quicker
 expon(X, Y) ->
   if
     Y == 0 -> 1;
@@ -97,28 +96,23 @@ expon(X, Y) ->
     true -> expon(X, Y - 1) * X
   end.
 
+
 %Insertion sort
+%
+%insert a specific element into a list
+insert(E, []) -> [E];
 insert(E, L) ->
-if
-  length(L) == 0 -> L = [E|[]];
-  true -> L
-end.
+  if
+    hd(L) >= E -> [E | L];
+    true -> [hd(L)|insert(E,tl(L))]
+  end.
 
+%insertion-sort a given array into a target array
+isort([], _) -> [];
+isort(List, Sorted) ->  insert(hd(List), isort(tl(List), Sorted)).
 
+%final insertion-sort
+isort(L) -> isort(L, []).
 
-
-%%
-%%isort(L) -> isort(L, ...).
-%%isort(.., ...) ->
-%%...;
-%%isort(..., ...) ->
-%%isort(..., ...).
-%%insert(..., ...) ->
-%%...;
-%%insert(..., ...) ->
-%%if
-%%... -> ...;
-%%true -> ...
-%%end.
 
 
