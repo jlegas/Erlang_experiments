@@ -72,9 +72,9 @@ temp(F) -> (F - 32) / 1.8.
 
 area(A, B) -> A * B.
 
-square(A) -> area(A, A).
+squarea(A) -> area(A, A).
 
-circarea(R) -> math:pi() * square(R).
+circarea(R) -> math:pi() * R * R.
 
 product(M, N) ->
   if
@@ -92,7 +92,7 @@ expon(X, Y) ->
   if
     Y == 0 -> 1;
     Y == 1 -> X;
-    Y rem 2 == 0 -> square(expon(X, Y / 2));
+    Y rem 2 == 0 -> (expon(X, Y / 2)) * (expon(X, Y / 2));
     true -> expon(X, Y - 1) * X
   end.
 
@@ -114,5 +114,25 @@ isort(List, Sorted) ->  insert(hd(List), isort(tl(List), Sorted)).
 %final insertion-sort
 isort(L) -> isort(L, []).
 
+
+
+%Merge sort
+%
+%main
+msort([]) -> [];
+msort([E]) -> [E];
+msort(L) -> {Left, Right} = msplit(L, [], []), merge(msort(Left), msort(Right)).
+
+%split list into two
+msplit([], Left, Right) -> {Left, Right};
+msplit(L, Left, Right) -> msplit(tl(L), [hd(L) | Right], Left).
+
+%merge from smallest to largest, last case at one element left to merge
+merge([E], Right) -> insert(E, Right);
+merge(Left, [E]) -> insert(E, Left);
+merge(Left, Right) -> if
+                        hd(Left) =< hd(Right) -> [hd(Left) | merge(tl(Left),Right)];
+                        true -> [hd(Right) | merge(Left, tl(Right))]
+                      end.
 
 
