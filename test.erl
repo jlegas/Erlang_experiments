@@ -136,3 +136,66 @@ merge(Left, Right) -> if
                       end.
 
 
+%Quick sort
+%
+%main
+qsort([]) -> [];
+qsort([E]) -> [E];
+qsort(L) -> {Left, Right} = qsplit(hd(L), tl(L), [], []),
+SmallSorted = qsort(Left) ++ [hd(L)],
+LargeSorted = qsort(Right),
+append(SmallSorted, LargeSorted).
+
+append(Left, Right) -> Left ++ Right.
+
+%split the list using 1st element as a pivot
+qsplit(_, [], Left, Right) -> {Left, Right};
+qsplit(Pivot, ListTOSplit, Left, Right) -> if
+                                             Pivot >= hd(ListTOSplit) -> qsplit(Pivot, tl(ListTOSplit), [hd(ListTOSplit) | Left], Right);
+                                             true -> qsplit(Pivot, tl(ListTOSplit), Left, [hd(ListTOSplit) | Right])
+                                           end.
+
+%Benchmark
+%shows the difference in performance between naive reversing of lists and accumulator assisted
+%
+%naive reverse
+nreverse([]) -> [];
+nreverse([H|T]) ->
+  R = nreverse(T),
+  append(R, [H]).
+
+%Accumulated reverse
+areverse(L) ->
+  areverse(L, []).
+areverse([], R) ->
+  R;
+areverse([H|T], R) ->
+  areverse(T, [H|R]).
+
+%Benchmark
+bench() ->
+  Ls = [16, 32, 64, 128, 256, 512],
+  N = 10000,
+  Bench = fun(L) ->
+    S = lists:seq(1,L),
+    Tn = time(N, fun() -> nreverse(S) end),
+    Tr = time(N, fun() -> areverse(S) end),
+    io:format("length: ~10w nrev: ~8w us arev: ~8w us~n", [L, Tn, Tr])
+          end,
+  lists:foreach(Bench, Ls).
+time(N, F)->
+%% time in micro seconds
+  T1 = erlang:system_time(micro_seconds),
+  loop(N, F),
+  T2 = erlang:system_time(micro_seconds),
+  (T2 -T1).
+loop(N, Fun) ->
+  if N == 0 -> ok; true -> Fun(), loop(N-1, Fun) end.
+
+
+%Binary coding
+%
+%
+bin(0) -> [0];
+bin(1) -> [1];
+bin(N) -> bin(N div 2) ++ [N rem 2].
