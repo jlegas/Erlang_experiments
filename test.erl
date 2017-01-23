@@ -194,8 +194,45 @@ loop(N, Fun) ->
 
 
 %Binary coding
+%represents a decimal integer in binary format in 2 different ways
+%bin(N) and bin2pow(N)
 %
-%
+%Simple remainder division by 2 method
 bin(0) -> [0];
 bin(1) -> [1];
 bin(N) -> bin(N div 2) ++ [N rem 2].
+
+%Sum of powers of 2 method (inefficient)
+bin2pow(0) -> 0;
+bin2pow(1) -> 1;
+bin2pow(N) -> list1and0(has2powers(N)).
+
+%Lists
+list1and0(L) -> list1and0(hd(L), L).
+list1and0(-1, _) -> [];
+list1and0(N, L) -> case notinlist(N, L) /= [] of
+                     true -> [0 | list1and0(N - 1, L)];
+                     false -> [1 | list1and0(N - 1, L)]
+                   end.
+
+%return a list of powers of 2 that sum up to the N
+has2powers(0) -> [];
+has2powers(1) -> [0];
+has2powers(2) -> [1];
+has2powers(N) ->
+  [highest2pow(N) | has2powers(N - raise2toPow(highest2pow(N)))].
+
+%return the highest power of 2 that is <= N
+highest2pow(1) -> 0;
+highest2pow(N) -> if
+                    (N div 2) >= 1 -> 1 + (highest2pow(N div 2));
+                    true -> 1
+                  end.
+
+%raises 2 to the power N
+raise2toPow(0) -> 0;
+raise2toPow(1) -> 2;
+raise2toPow(N) -> 2 * raise2toPow(N - 1).
+
+
+
