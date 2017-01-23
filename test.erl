@@ -82,6 +82,8 @@ product(M, N) ->
     true -> N + product(M - 1, N)
   end.
 
+
+
 %exponentials
 exp(_, 0) -> 1;
 exp(X, 1) -> X;
@@ -95,6 +97,7 @@ expon(X, Y) ->
     Y rem 2 == 0 -> (expon(X, Y / 2)) * (expon(X, Y / 2));
     true -> expon(X, Y - 1) * X
   end.
+
 
 
 %Insertion sort
@@ -136,6 +139,7 @@ merge(Left, Right) -> if
                       end.
 
 
+
 %Quick sort
 %
 %main
@@ -154,6 +158,8 @@ qsplit(Pivot, ListTOSplit, Left, Right) -> if
                                              Pivot >= hd(ListTOSplit) -> qsplit(Pivot, tl(ListTOSplit), [hd(ListTOSplit) | Left], Right);
                                              true -> qsplit(Pivot, tl(ListTOSplit), Left, [hd(ListTOSplit) | Right])
                                            end.
+
+
 
 %Benchmark
 %shows the difference in performance between naive reversing of lists and accumulator assisted
@@ -203,8 +209,8 @@ bin(1) -> [1];
 bin(N) -> bin(N div 2) ++ [N rem 2].
 
 %Sum of powers of 2 method (inefficient)
-bin2pow(0) -> 0;
-bin2pow(1) -> 1;
+bin2pow(0) -> [0];
+bin2pow(1) -> [1];
 bin2pow(N) -> list1and0(has2powers(N)).
 
 %Lists
@@ -236,3 +242,16 @@ raise2toPow(N) -> 2 * raise2toPow(N - 1).
 
 
 
+%Fibonacci fib(N) with benchmark fibb()
+fib(0) -> 0;
+fib(1) -> 1;
+fib(N) -> fib(N - 1) + fib(N - 2).
+
+fibb() ->
+  Ls = [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40],
+  N = 10,
+  Bench = fun(L) ->
+    T = time(N, fun() -> fib(L) end),
+    io:format("n: ~4w fib(n) calculated in: ~8w us~n", [L, T])
+          end,
+  lists:foreach(Bench, Ls).
