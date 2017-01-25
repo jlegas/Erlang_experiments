@@ -83,7 +83,6 @@ product(M, N) ->
   end.
 
 
-
 %exponentials
 exp(_, 0) -> 1;
 exp(X, 1) -> X;
@@ -99,7 +98,6 @@ expon(X, Y) ->
   end.
 
 
-
 %Insertion sort
 %
 %insert a specific element into a list
@@ -107,16 +105,15 @@ insert(E, []) -> [E];
 insert(E, L) ->
   if
     hd(L) >= E -> [E | L];
-    true -> [hd(L)|insert(E,tl(L))]
+    true -> [hd(L) | insert(E, tl(L))]
   end.
 
 %insertion-sort a given array into a target array
 isort([], _) -> [];
-isort(List, Sorted) ->  insert(hd(List), isort(tl(List), Sorted)).
+isort(List, Sorted) -> insert(hd(List), isort(tl(List), Sorted)).
 
 %final insertion-sort
 isort(L) -> isort(L, []).
-
 
 
 %Merge sort
@@ -134,10 +131,9 @@ msplit(L, Left, Right) -> msplit(tl(L), [hd(L) | Right], Left).
 merge([E], Right) -> insert(E, Right);
 merge(Left, [E]) -> insert(E, Left);
 merge(Left, Right) -> if
-                        hd(Left) =< hd(Right) -> [hd(Left) | merge(tl(Left),Right)];
+                        hd(Left) =< hd(Right) -> [hd(Left) | merge(tl(Left), Right)];
                         true -> [hd(Right) | merge(Left, tl(Right))]
                       end.
-
 
 
 %Quick sort
@@ -146,19 +142,19 @@ merge(Left, Right) -> if
 qsort([]) -> [];
 qsort([E]) -> [E];
 qsort(L) -> {Left, Right} = qsplit(hd(L), tl(L), [], []),
-SmallSorted = qsort(Left) ++ [hd(L)],
-LargeSorted = qsort(Right),
-append(SmallSorted, LargeSorted).
+  SmallSorted = qsort(Left) ++ [hd(L)],
+  LargeSorted = qsort(Right),
+  append(SmallSorted, LargeSorted).
 
 append(Left, Right) -> Left ++ Right.
 
 %split the list using 1st element as a pivot
 qsplit(_, [], Left, Right) -> {Left, Right};
 qsplit(Pivot, ListTOSplit, Left, Right) -> if
-                                             Pivot >= hd(ListTOSplit) -> qsplit(Pivot, tl(ListTOSplit), [hd(ListTOSplit) | Left], Right);
+                                             Pivot >= hd(ListTOSplit) ->
+                                               qsplit(Pivot, tl(ListTOSplit), [hd(ListTOSplit) | Left], Right);
                                              true -> qsplit(Pivot, tl(ListTOSplit), Left, [hd(ListTOSplit) | Right])
                                            end.
-
 
 
 %Benchmark
@@ -166,7 +162,7 @@ qsplit(Pivot, ListTOSplit, Left, Right) -> if
 %
 %naive reverse
 nreverse([]) -> [];
-nreverse([H|T]) ->
+nreverse([H | T]) ->
   R = nreverse(T),
   append(R, [H]).
 
@@ -175,28 +171,28 @@ areverse(L) ->
   areverse(L, []).
 areverse([], R) ->
   R;
-areverse([H|T], R) ->
-  areverse(T, [H|R]).
+areverse([H | T], R) ->
+  areverse(T, [H | R]).
 
 %Benchmark
 bench() ->
   Ls = [16, 32, 64, 128, 256, 512],
   N = 10000,
   Bench = fun(L) ->
-    S = lists:seq(1,L),
+    S = lists:seq(1, L),
     Tn = time(N, fun() -> nreverse(S) end),
     Tr = time(N, fun() -> areverse(S) end),
     io:format("length: ~10w nrev: ~8w us arev: ~8w us~n", [L, Tn, Tr])
           end,
   lists:foreach(Bench, Ls).
-time(N, F)->
+time(N, F) ->
 %% time in micro seconds
   T1 = erlang:system_time(micro_seconds),
   loop(N, F),
   T2 = erlang:system_time(micro_seconds),
-  (T2 -T1).
+  (T2 - T1).
 loop(N, Fun) ->
-  if N == 0 -> ok; true -> Fun(), loop(N-1, Fun) end.
+  if N == 0 -> ok; true -> Fun(), loop(N - 1, Fun) end.
 
 
 %Binary coding
@@ -241,14 +237,13 @@ raise2toPow(1) -> 2;
 raise2toPow(N) -> 2 * raise2toPow(N - 1).
 
 
-
 %Fibonacci fib(N) with benchmark fibb()
 fib(0) -> 0;
 fib(1) -> 1;
 fib(N) -> fib(N - 1) + fib(N - 2).
 
 fibb() ->
-  Ls = [8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40],
+  Ls = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40],
   N = 10,
   Bench = fun(L) ->
     T = time(N, fun() -> fib(L) end),
