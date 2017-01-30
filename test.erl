@@ -98,6 +98,16 @@ expon(X, Y) ->
   end.
 
 
+
+%List iterator with a chosen operator and accumulator
+%"folds" the list into a value with some predefined operation
+foldr(_Operator, Accumulator, []) ->
+  Accumulator;
+foldr(Operator, Accumulator, [H|T]) ->
+  Operator(H, foldr(Operator, Accumulator, T)).
+
+
+
 %Insertion sort
 %
 %insert a specific element into a list
